@@ -37,6 +37,10 @@ app.use("/api/auth", authRoutes);
 app.use("/api/income", incomeRoutes);
 app.use("/api/loan", loanRoutes);
 
+app.get("/", (req, res) => {
+  res.send("Hello from  Backend!");
+});
+
 // Connect to MongoDB and start server
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
