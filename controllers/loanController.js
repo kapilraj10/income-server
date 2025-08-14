@@ -34,15 +34,7 @@ exports.createLoan = async (req, res) => {
   }
 };
 
-// Get all loans
-exports.getLoans = async (req, res) => {
-  try {
-    const loans = await Loan.find();
-    res.json(loans);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
+
 
 // Update Loan
 exports.updateLoan = async (req, res) => {
