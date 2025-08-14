@@ -6,10 +6,7 @@ exports.createIncome = async (req, res) => {
   res.json(entry);
 };
 
-exports.getAll = async (req, res) => {
-  const data = await Income.find().populate("createdBy", "username");
-  res.json(data);
-};
+
 
 exports.updateIncome = async (req, res) => {
   const updated = await Income.findByIdAndUpdate(req.params.id, req.body, { new: true });
