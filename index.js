@@ -14,7 +14,7 @@ const app = express();
 
 const allowedOrigins = [
   "https://income-client.vercel.app",
-  "http://localhost:5173"
+  "https://income-client-9lhp.vercel.app"
 ];
 
 app.use(cors({
