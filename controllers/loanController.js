@@ -1,11 +1,13 @@
-const Loan = require("../models/Loan"); 
+const Loan = require("../models/Loan");
 
+// Create Loan
 exports.createLoan = async (req, res) => {
   try {
-    const { name, amount, duration, interestRate } = req.body; 
+    const { name, amount, duration, interestRate } = req.body;
 
-    const monthlyInterestRate = interestRate / 12 / 100; 
-    const totalInterest = amount * monthlyInterestRate * duration;
+    // Monthly interest (simple monthly calculation)
+    const monthlyInterest = (amount * interestRate) / 100;
+    const totalInterest = monthlyInterest * duration;
     const totalPayable = amount + totalInterest;
 
     const paidAmount = parseFloat(req.body.paidAmount || 0);
@@ -14,8 +16,9 @@ exports.createLoan = async (req, res) => {
     const loan = new Loan({
       name,
       amount,
-      duration, 
+      duration,
       interestRate,
+      monthlyInterest,
       totalInterest,
       totalPayable,
       paidAmount,
@@ -31,6 +34,7 @@ exports.createLoan = async (req, res) => {
   }
 };
 
+// Get all loans
 exports.getLoans = async (req, res) => {
   try {
     const loans = await Loan.find();
@@ -40,12 +44,13 @@ exports.getLoans = async (req, res) => {
   }
 };
 
+// Update Loan
 exports.updateLoan = async (req, res) => {
   try {
     const { amount, duration, interestRate, paidAmount } = req.body;
 
-    const monthlyInterestRate = interestRate / 12 / 100;
-    const totalInterest = amount * monthlyInterestRate * duration;
+    const monthlyInterest = (amount * interestRate) / 100;
+    const totalInterest = monthlyInterest * duration;
     const totalPayable = amount + totalInterest;
 
     const paid = parseFloat(paidAmount) || 0;
@@ -55,6 +60,7 @@ exports.updateLoan = async (req, res) => {
       req.params.id,
       {
         ...req.body,
+        monthlyInterest,
         totalInterest,
         totalPayable,
         paidAmount: paid,
@@ -70,6 +76,7 @@ exports.updateLoan = async (req, res) => {
   }
 };
 
+// Delete Loan
 exports.deleteLoan = async (req, res) => {
   try {
     await Loan.findByIdAndDelete(req.params.id);
