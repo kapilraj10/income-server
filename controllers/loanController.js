@@ -1,13 +1,11 @@
-const Loan = require("../models/Loan");
+const Loan = require("../models/Loan"); 
 
-// Create Loan
 exports.createLoan = async (req, res) => {
   try {
-    const { name, amount, duration, interestRate } = req.body;
+    const { name, amount, duration, interestRate } = req.body; 
 
-    // Monthly interest (simple monthly calculation)
-    const monthlyInterest = (amount * interestRate) / 100;
-    const totalInterest = monthlyInterest * duration;
+    const monthlyInterestRate = interestRate / 12 / 100; 
+    const totalInterest = amount * monthlyInterestRate * duration;
     const totalPayable = amount + totalInterest;
 
     const paidAmount = parseFloat(req.body.paidAmount || 0);
@@ -16,9 +14,8 @@ exports.createLoan = async (req, res) => {
     const loan = new Loan({
       name,
       amount,
-      duration,
+      duration, 
       interestRate,
-      monthlyInterest,
       totalInterest,
       totalPayable,
       paidAmount,
@@ -34,34 +31,21 @@ exports.createLoan = async (req, res) => {
   }
 };
 
-// Get All Loans
 exports.getLoans = async (req, res) => {
   try {
-    const loans = await Loan.find().populate("createdBy", "name email"); // optional populate
+    const loans = await Loan.find();
     res.json(loans);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-// Get Single Loan
-exports.getLoanById = async (req, res) => {
-  try {
-    const loan = await Loan.findById(req.params.id).populate("createdBy", "name email");
-    if (!loan) return res.status(404).json({ message: "Loan not found" });
-    res.json(loan);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-// Update Loan
 exports.updateLoan = async (req, res) => {
   try {
     const { amount, duration, interestRate, paidAmount } = req.body;
 
-    const monthlyInterest = (amount * interestRate) / 100;
-    const totalInterest = monthlyInterest * duration;
+    const monthlyInterestRate = interestRate / 12 / 100;
+    const totalInterest = amount * monthlyInterestRate * duration;
     const totalPayable = amount + totalInterest;
 
     const paid = parseFloat(paidAmount) || 0;
@@ -71,7 +55,6 @@ exports.updateLoan = async (req, res) => {
       req.params.id,
       {
         ...req.body,
-        monthlyInterest,
         totalInterest,
         totalPayable,
         paidAmount: paid,
@@ -87,7 +70,6 @@ exports.updateLoan = async (req, res) => {
   }
 };
 
-// Delete Loan
 exports.deleteLoan = async (req, res) => {
   try {
     await Loan.findByIdAndDelete(req.params.id);
