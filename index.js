@@ -13,7 +13,7 @@ const app = express();
 
 
 const allowedOrigins = [
-  "https://income-client.vercel.app",
+  "https://income-client-9lhp.vercel.app",
   "https://income-client-9lhp.vercel.app"
 ];
 
