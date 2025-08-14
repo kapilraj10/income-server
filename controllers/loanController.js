@@ -34,7 +34,26 @@ exports.createLoan = async (req, res) => {
   }
 };
 
+// Get All Loans
+exports.getLoans = async (req, res) => {
+  try {
+    const loans = await Loan.find().populate("createdBy", "name email"); // optional populate
+    res.json(loans);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 
+// Get Single Loan
+exports.getLoanById = async (req, res) => {
+  try {
+    const loan = await Loan.findById(req.params.id).populate("createdBy", "name email");
+    if (!loan) return res.status(404).json({ message: "Loan not found" });
+    res.json(loan);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 
 // Update Loan
 exports.updateLoan = async (req, res) => {
